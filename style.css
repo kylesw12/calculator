@@ -1,0 +1,54 @@
+
+.calc-buttons {
+    display: flex;
+    flex-direction: column;
+}
+
+.calc-inputs {
+    display: flex;
+    flex-direction: row;
+}
+
+.calc-numbers {
+    display: flex;
+    flex-wrap: wrap;
+    box-sizing: border-box;
+    height: 400px;
+    width: 300px;
+}
+
+.num {
+    box-sizing: border-box;
+    height: 100px;
+    width: 100px;
+    font-size: 20px;
+}
+
+.zero {
+    width: 300px;
+    text-align: center;
+}
+
+.calc-operators{
+    display:flex;
+    flex-direction: column;
+}
+
+.op {
+    height: 100px;
+    width: 100px;
+    font-size: 25px;
+}
+
+.calc-action{
+    display: flex;
+    box-sizing: border-box;
+    width: 400px;
+}
+
+.act {
+    box-sizing: border-box;
+    height: 100px;
+    width: 200px;
+    font-size: 25px;
+}
