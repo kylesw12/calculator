@@ -1,5 +1,5 @@
 let num1 = '';
-let op = '';
+let operator = '';
 let num2 = '';
 
 function add(x, y){
@@ -36,11 +36,34 @@ function operate(operator, x, y){
     }
 }
 
+function convertEquation(str) {
+    let foundOp = false;
+    num1 = '';
+    num2 = '';
+    operator = '';
+
+    for(let char of str) {
+        if("+-*/".includes(char) && !foundOp){
+            operator = char;
+            foundOp = true;
+        }
+        else if(!foundOp){
+            num1 += char;
+        }
+        else {
+            num2 += char;
+        }
+    }
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     let currentInput = "";
 
     const display = document.getElementById("display");
     const num = document.querySelectorAll(".num");
+    const op = document.querySelectorAll(".op");
+    const clear = document.querySelector(".clear");
+    const equals = document.querySelector(".equal");
 
     num.forEach(button => {
         button.addEventListener("click", () => {
@@ -48,4 +71,25 @@ document.addEventListener("DOMContentLoaded", () => {
             display.textContent = currentInput;
         });
     });
+
+    op.forEach(button => {
+        button.addEventListener("click", () => {
+            currentInput += button.textContent;
+            display.textContent = currentInput;
+        })
+    })
+
+    equals.addEventListener("click", () => {
+        convertEquation(currentInput);
+        display.textContent = operate(operator, Number(num1), Number(num2));
+    });
+
+    clear.addEventListener("click", () => {
+        currentInput = '';
+        num1 = '';
+        num2 = '';
+        operator = '';
+        display.textContent = '0';
+    })
 });
+
