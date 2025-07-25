@@ -36,4 +36,16 @@ function operate(operator, x, y){
     }
 }
 
+document.addEventListener("DOMContentLoaded", () => {
+    let currentInput = "";
 
+    const display = document.getElementById("display");
+    const num = document.querySelectorAll(".num");
+
+    num.forEach(button => {
+        button.addEventListener("click", () => {
+            currentInput += button.textContent;
+            display.textContent = currentInput;
+        });
+    });
+});
