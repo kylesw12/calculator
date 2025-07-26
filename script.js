@@ -23,18 +23,33 @@ function divide(x, y){
 }
 
 function operate(operator, x, y){
+    let result;
     switch(operator) {
         case '*':
-            return multiply(x, y);
+            result = multiply(x, y);
+            break;
+
         case '/':
-            return divide(x, y);
+            result = divide(x, y);
+            break;
         case '+':
-            return add(x, y);
+            result = add(x, y);
+            break;
         case '-':
-            return subtract(x, y);
+            result = subtract(x, y);
+            break;
         default:
             return "Error: Unknown operator";
     }
+
+    if (typeof result === "string") return result;
+
+    // If result is a float with many decimals, round it
+    if (!Number.isInteger(result)) {
+        result = parseFloat(result.toFixed(2));  // Round to 2 decimal places
+    }
+
+    return result;
 }
 
 // function convertEquation(str) {
@@ -134,6 +149,8 @@ document.addEventListener("DOMContentLoaded", () => {
     })
 
     equals.addEventListener("click", () => {
+        if (!num1 || !operator || !num2) return;
+
         const result = operate(operator, Number(num1), Number(num2));
         updateDisplay(result);
         if (typeof result === "string" && result.startsWith("Error")) {
