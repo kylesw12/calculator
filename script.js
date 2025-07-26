@@ -1,6 +1,7 @@
 let num1 = '';
 let operator = '';
 let num2 = '';
+let valueDisplayed = false;
 
 function add(x, y){
     return x + y;
@@ -36,28 +37,34 @@ function operate(operator, x, y){
     }
 }
 
-function convertEquation(str) {
-    let foundOp = false;
+// function convertEquation(str) {
+//     let foundOp = false;
+//     num1 = '';
+//     num2 = '';
+//     operator = '';
+
+//     for(let char of str) {
+//         // gets the last operator (ex. if input is x +*- y, it will evaluate as x - y)
+//         if("+-*/".includes(char)){
+//             operator = char;
+//             foundOp = true;
+//         }
+//         else if(!foundOp){
+//             num1 += char;
+//         }
+//         else {
+//             num2 += char;
+//         }
+//     }
+// }
+
+function resetCalc () {
     num1 = '';
     num2 = '';
     operator = '';
-
-    for(let char of str) {
-        if("+-*/".includes(char) && !foundOp){
-            operator = char;
-            foundOp = true;
-        }
-        else if(!foundOp){
-            num1 += char;
-        }
-        else {
-            num2 += char;
-        }
-    }
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    let currentInput = "";
 
     const display = document.getElementById("display");
     const num = document.querySelectorAll(".num");
@@ -65,31 +72,82 @@ document.addEventListener("DOMContentLoaded", () => {
     const clear = document.querySelector(".clear");
     const equals = document.querySelector(".equal");
 
+    function updateDisplay(val){
+        display.textContent = val.toString();
+    }
+
     num.forEach(button => {
-        button.addEventListener("click", () => {
-            currentInput += button.textContent;
-            display.textContent = currentInput;
+        button.addEventListener("click", () => {button.textContent
+            if(valueDisplayed){
+                resetCalc();
+                num1 = button.textContent;
+                updateDisplay(num1);
+                valueDisplayed = false;
+                return;
+            }
+            if(!operator){
+                num1 += button.textContent;
+                updateDisplay(num1);
+            } else {
+                num2 += button.textContent;
+                updateDisplay(num1 + ' ' + operator + ' ' + num2);
+            }
         });
     });
 
     op.forEach(button => {
         button.addEventListener("click", () => {
-            currentInput += button.textContent;
-            display.textContent = currentInput;
+            if(!num1){
+                return;
+            }
+
+            if(valueDisplayed){
+                valueDisplayed = false;
+            }
+            
+            if(operator && !num2){
+                operator = button.textContent;
+                updateDisplay(num1 + ' ' + operator);
+                return;
+            }
+
+            if(num1 && operator && num2){
+                const result = operate(operator, Number(num1), Number(num2));
+                
+                updateDisplay(result + ' ' + button.textContent);
+
+                if (typeof result === "string" && result.startsWith("Error")) {
+                    resetCalc();
+                    return;
+                }
+
+                num1 = result;
+                num2 = '';
+                operator = button.textContent;
+            }
+            else{
+                operator = button.textContent;
+                updateDisplay(num1 + ' ' + operator);
+            }
+            
         })
     })
 
     equals.addEventListener("click", () => {
-        convertEquation(currentInput);
-        display.textContent = operate(operator, Number(num1), Number(num2));
+        const result = operate(operator, Number(num1), Number(num2));
+        updateDisplay(result);
+        if (typeof result === "string" && result.startsWith("Error")) {
+            resetCalc();
+            return;
+        }
+        resetCalc();
+        valueDisplayed = true;
+        num1 = result.toString();
     });
 
     clear.addEventListener("click", () => {
-        currentInput = '';
-        num1 = '';
-        num2 = '';
-        operator = '';
-        display.textContent = '0';
+        resetCalc();
+        updateDisplay('0');
     })
 });
 
